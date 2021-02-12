@@ -1,0 +1,14 @@
+ver información del archivo ejecutable ==> file ./ejecutable
+------------------------------------------
+ver archivo ejecutable ==> nm ./ejecutable
+------------------------------------------
+desensamblar archivo ejecutable => objdump -d ejecutable
+------------------------------------------
+ensamblar + enlazar => as programa.s -o programa.o && ld programa.o -o hola
+------------------------------------------
+compilar => gcc -nostdlib -g hola.s -o hola 
+            (si no funciona usamos)
+            gcc -nostdlib -no-pie -g hola64.s -o bin/hola64
+
+-------------------------------------------
+

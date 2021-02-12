@@ -1,0 +1,51 @@
+**********************************************************************************************
+Ejercicio 5 .- Desensambla hola-c y hola-cpp , ¿Qué hace ahora diferente la función main() 
+respecto a C?
+*********************************************************************************************
+
+    -----------------
+    *MAIN DE hola-c 
+    -----------------
+
+    0000000000001149 <main>:
+    1149:	f3 0f 1e fa          	endbr64 
+    114d:	55                   	push   %rbp
+    114e:	48 89 e5             	mov    %rsp,%rbp
+    1151:	48 8d 3d ac 0e 00 00 	lea    0xeac(%rip),%rdi        # 2004 <_IO_stdin_used+0x4>
+    1158:	e8 f3 fe ff ff       	callq  1050 <puts@plt>
+    115d:	b8 00 00 00 00       	mov    $0x0,%eax
+    1162:	5d                   	pop    %rbp
+    1163:	c3                   	retq   
+    1164:	66 2e 0f 1f 84 00 00 	nopw   %cs:0x0(%rax,%rax,1)
+    116b:	00 00 00 
+    116e:	66 90                	xchg   %ax,%ax
+
+    -----------------
+    *MAIN DE hola-cpp 
+    -----------------
+
+    0000000000001189 <main>:
+        1189:	f3 0f 1e fa          	endbr64 
+        118d:	55                   	push   %rbp
+        118e:	48 89 e5             	mov    %rsp,%rbp
+        1191:	48 8d 35 6d 0e 00 00 	lea    0xe6d(%rip),%rsi        # 2005 <std::piecewise_construct+0x1>
+        1198:	48 8d 3d a1 2e 00 00 	lea    0x2ea1(%rip),%rdi        # 4040 <std::cout@@GLIBCXX_3.4>
+        119f:	e8 dc fe ff ff       	callq  1080 <std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*)@plt>
+        11a4:	b8 00 00 00 00       	mov    $0x0,%eax
+        11a9:	5d                   	pop    %rbp
+        11aa:	c3                   	retq   
+
+
+***********
+RESPUESTA:  En c se utiliza una llamada al sistema para hacer printf
+
+(    1151:	48 8d 3d ac 0e 00 00 	lea    0xeac(%rip),%rdi        # 2004 <_IO_stdin_used+0x4> )
+
+            En c++ se llama a la biblioteca std 
+
+(   1191:	48 8d 35 6d 0e 00 00 	lea    0xe6d(%rip),%rsi        # 2005 <std::piecewise_construct+0x1> )
+    1198:	48 8d 3d a1 2e 00 00 	lea    0x2ea1(%rip),%rdi        # 4040 <std::cout@@GLIBCXX_3.4> )
+
+**********
+
+

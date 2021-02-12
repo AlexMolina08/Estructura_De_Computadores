@@ -1,0 +1,112 @@
+ver información del archivo ejecutable ==> file ./ejecutable
+------------------------------------------
+ver archivo ejecutable ==> nm ./ejecutable
+------------------------------------------
+desensamblar archivo ejecutable => objdump -d ejecutable
+------------------------------------------
+ensamblar + enlazar => as programa.s -o programa.o && ld programa.o -o hola
+------------------------------------------
+compilar => gcc -nostdlib -g hola.s -o hola 
+            (si no funciona usamos)
+            gcc -nostdlib -no-pie -g hola64.s -o bin/hola64
+
+-------------------------------------------
+
+Ver simbolos del código
+
+**********
+instrucciones gdb
+********
+
+*) COMPILAR CON OPCIONES DE DEBUGING ==> gcc -g programa.c -o programa
+
+*) lanzar GDB ==> gdb programa
+
+*) Ver codigo fuente ==> list
+
+*) Añadir breakpoint ==> b funcion
+
+*) Ver breakproints ==> info b
+
+*) Ejecutar hasta breakpoint ==> run
+
+*) Ver assembly ==> disass 
+
+---------------------------
+	Esto produce la siguiente salida:
+
+   <DIRECCION INSTRUCCIONES> <OFFSET> <INSTRUCCIÓN> <ARGUMENTO(S)>
+
+=>   0x0000555555555149 <+0>:	endbr64  (LA FLECHA INDICA QUE LA EJECUCION VA POR ESTA INSTRUCCIÓN)
+     0x000055555555514d <+4>:	push   %rbp
+     0x000055555555514e <+5>:	mov    %rsp,%rbp
+     0x0000555555555151 <+8>:	sub    $0x10,%rsp
+     0x0000555555555155 <+12>:	movl   $0x2,-0x8(%rbp)
+     0x000055555555515c <+19>:	movl   $0x3,-0x4(%rbp)
+     0x0000555555555163 <+26>:	mov    -0x4(%rbp),
+     0x0000555555555166 <+29>:	add    %eax,-0x8(%rbp)
+     0x0000555555555169 <+32>:	mov    -0x8(%rbp),%eax
+     0x000055555555516c <+35>:	mov    %eax,%esi
+     0x000055555555516e <+37>:	lea    0xe8f(%rip),%rdi        # 0x555555556004
+     0x0000555555555175 <+44>:	mov    $0x0,%eax
+     0x000055555555517a <+49>:	callq  0x555555555050 <printf@plt>
+     0x000055555555517f <+54>:	mov    $0x0,%eax
+     0x0000555555555184 <+59>:	leaveq 
+     0x0000555555555185 <+60>:	retq   
+----------------------------------
+
+*) Siguiente instrucción ==> nexti
+
+*) Siguiente instruccion y entra en funcion si hay => stepi
+
+*) IMPRIMIR VALOR DE UNA VARIABLE => print variable
+
+*) IMPRIMIR LA DIR. DE MEMORIA DE UNA VARIABLE => print &variable
+
+*) IMPRIMIR CONTENIDO DE UNA DIRECCIÓN DE MEMORIA => x /d direcciónMemoria
+-------------------------------------------------------------------------
+	Ejemplo: 
+		(gdb) x /d $rbp-0x8
+		
+		<DIR.MEMORIA>: <CONTENIDO>
+		0x7fffffffde88:	2
+----------------------------------------------------------------------------
+
+*) VER VALOR DE TODOS LOS REGISTROS ==> info reg
+---------------------------------------------------------------------------
+	Ejemplo:
+		(gdb) info reg
+		
+		<REGISTRO>     <VALOR>
+      rax            0x555555555149      93824992235849
+      rbx            0x555555555190      93824992235920
+      rcx            0x555555555190      93824992235920
+      rdx            0x7fffffffdf98      140737488347032
+      rsi            0x7fffffffdf88      140737488347016
+      rdi            0x1                 1
+      rbp            0x7fffffffde90      0x7fffffffde90
+      rsp            0x7fffffffde80      0x7fffffffde80
+      r8             0x0                 0
+      r9             0x7ffff7fe0d50      140737354009936
+      r10            0x3                 3
+      r11            0x0                 0
+      r12            0x555555555060      93824992235616
+      r13            0x7fffffffdf80      140737488347008
+      r14            0x0                 0
+      r15            0x0                 0
+      rip            0x55555555515c      0x55555555515c <main+19>
+      eflags         0x202               [ IF ]
+      cs             0x33                51
+      ss             0x2b                43
+      ds             0x0                 0
+      es             0x0                 0
+      fs             0x0                 0
+      gs             0x0                 0
+------------------------------------------------------------------------------------------
+
+*) VER VALOR DE UN REGISTRO ==> info reg nombreRegistro
+--------------------------------------------------------
+
+   Ejemplo: 
+   
+      (dgb) info reg rax

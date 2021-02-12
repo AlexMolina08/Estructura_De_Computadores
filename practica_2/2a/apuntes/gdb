@@ -1,0 +1,93 @@
+**********
+instrucciones gdb
+********
+
+o - octal
+x - hexadecimal
+d - decimal
+u - unsigned decimal
+t - binary
+f - floating point
+a - address
+c - char
+s - string
+i - instruction
+
+<var> : valor de la variable
+&<var> : dir. de la variable
+
+
+*) COMPILAR CON OPCIONES DE DEBUGING ==> gcc -g programa.c -o programa
+
+*) lanzar GDB ==> gdb programa
+
+--------------------------------
+--------------------------------
+
+
+*) Ver codigo fuente ==> list
+
+*) Añadir breakpoint ==> b funcion
+
+*) Ver breakproints ==> info b
+
+*) Ejecutar hasta breakpoint ==> run
+
+*) Ver assembly ==> disass 
+
+*) EXAMINAR EL VALOR DE UNA ETIQUETA:
+
+    + [p]rint ( <tipo> ) <etiqueta>
+
+    + x/<tipo> <address> : Examina lo que hay dentro de esa dir.
+    
+    + x/1dg &etiqueta : Devuelve dir. inicio etiqueta y el valor en decimal
+
+    + x/1xg &etiqueta : Devuelve dir. inicio etiqueta y el valor en hexadecimal
+
+    + x/8xb &etiqueta : Muestra como está almacenado el dato byte a byte (8 bytes)
+
+
+*) Siguiente instrucción ==> nexti
+
+*) Siguiente instruccion y entra en funcion si hay => stepi
+
+*) VER VALOR DE TODOS LOS REGISTROS ==> info reg
+---------------------------------------------------------------------------
+	Ejemplo:
+		(gdb) info reg
+		
+		<REGISTRO>     <VALOR>
+      rax            0x555555555149      93824992235849
+      rbx            0x555555555190      93824992235920
+      rcx            0x555555555190      93824992235920
+      rdx            0x7fffffffdf98      140737488347032
+      rsi            0x7fffffffdf88      140737488347016
+      rdi            0x1                 1
+      rbp            0x7fffffffde90      0x7fffffffde90
+      rsp            0x7fffffffde80      0x7fffffffde80
+      r8             0x0                 0
+      r9             0x7ffff7fe0d50      140737354009936
+      r10            0x3                 3
+      r11            0x0                 0
+      r12            0x555555555060      93824992235616
+      r13            0x7fffffffdf80      140737488347008
+      r14            0x0                 0
+      r15            0x0                 0
+      rip            0x55555555515c      0x55555555515c <main+19>
+      eflags         0x202               [ IF ]
+      cs             0x33                51
+      ss             0x2b                43
+      ds             0x0                 0
+      es             0x0                 0
+      fs             0x0                 0
+      gs             0x0                 0
+------------------------------------------------------------------------------------------
+
+*) VER VALOR DE UN REGISTRO ==> info reg nombreRegistro
+--------------------------------------------------------
+
+   Ejemplo: 
+   
+      (dgb) info reg rax
+      

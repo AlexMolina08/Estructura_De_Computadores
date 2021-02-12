@@ -1,0 +1,187 @@
+Ejercicio 6. Descargue hola32.s. Ejecute el programa instrucción por
+instrucción con el ddd hasta comprender como funciona.
+------------------------------------------------------------
+-------------------------------------------------------------
+
+> gcc -m32 -nostdlib -g hola32.s -o hola32
+
+>gdb hola32
+
+	(gdb) list 
+
+		1	.data                     # datos
+		2	msg:    .string "¡hola, mundo!\n"
+		3	tam:    .int . - msg
+		4	
+		5	.text                     # código
+		6	        .globl _start     # empezar aquí
+		7	
+		8	write:  movl  $4, %eax    # write
+		9	        movl  $1, %ebx    # salida estándar
+		10	        movl  $msg, %ecx  # cadena
+		11	        movl  tam, %edx   # longitud
+		12	        int   $0x80       # llamada a write
+		13	        ret               # retorno
+		14	
+		15	exit:   movl  $1, %eax    # exit
+		16	        xorl  %ebx, %ebx  # 0
+		17	        int   $0x80       # llamada a exit
+		18	
+		19	_start:
+		20	        call  write       # llamada a función
+		21	        call  exit        # llamada a función
+
+
+	(gdb) b _start (LE METO UN BREAKPOINT EN LA FUNCION _start)
+	
+		Punto de interrupción 1 at 0x1021: file hola32.s, line 20.
+	
+	(gdb) run (COMENZAR A EJECUTAR EL PROGRAMA , SE PARA EN EL BREAKPOINT -QUE ES _start-)
+
+		Breakpoint 1, _start () at hola32.s:20
+		20	        call  write       # llamada a función
+
+	(gdb) disass
+		Dump of assembler code for function _start:
+(eip) =>0x56556021 <+0>:	call   0x56556000 <write> (siguiente instruccion a ejecutar)
+		0x56556026 <+5>:	call   0x56556018 <exit>
+
+	(gdb) x /d 0x56556000 (VEMOS LO QUE HAY EN LA DIRECCIÓN A LA QUE SE VA A LLAMAR EN LA 
+							SIG. INSTRUCCION)
+		
+		0x56556000 <write>:	1208  (VEMOS QUE ESTÁ EL INICIO DE LA FUNCION WRITE)
+
+	(gdb) nexti
+
+		8	write:  movl  $4, %eax    # write
+
+
+	(gdb) disass
+
+		Dump of assembler code for function write:
+		  =>0x56556000 <+0>:	mov    $0x4,%eax
+			0x56556005 <+5>:	mov    $0x1,%ebx
+			0x5655600a <+10>:	mov    $0x56558000,%ecx
+			0x5655600f <+15>:	mov    0x56558010,%edx
+			0x56556015 <+21>:	int    $0x80
+			0x56556017 <+23>:	ret    
+	
+	(gdb) nexti
+	(gdb) nexti
+		
+		10	        movl  $msg, %ecx  # cadena
+	
+	(gdb) disass
+		    0x56556000 <+0>:	mov    $0x4,%eax
+			0x56556005 <+5>:	mov    $0x1,%ebx
+		 => 0x5655600a <+10>:	mov    $0x56558000,%ecx
+			0x5655600f <+15>:	mov    0x56558010,%edx
+			0x56556015 <+21>:	int    $0x80
+			0x56556017 <+23>:	ret 
+
+	##Antes de ejecutar la siguiente instruccion , veamos que hay en la direccion donde $0x56558000
+	  (que es la direccion de memoria que se va a copiar a ecx)
+
+
+	(gdb) x /s 0x56558000
+
+		0x56558000:	"¡hola, mundo!\n" (VEMOS QUE LO QUE HAY ES EL INICO DEL STRING)
+
+	
+	(gdb) disass
+		Dump of assembler code for function write:
+
+		0x56556000 <+0>:	mov    $0x4,%eax
+		0x56556005 <+5>:	mov    $0x1,%ebx
+		0x5655600a <+10>:	mov    $0x56558000,%ecx
+	  => 0x5655600f <+15>:	mov    0x56558010,%edx
+		0x56556015 <+21>:	int    $0x80
+		0x56556017 <+23>:	ret   
+
+	(gdb) info reg ecx
+		ecx            0x56558000          1448443904
+
+		En ecx se ecuentra la dir 0x56558000 que es la que tiene el inicio del string
+	
+	(gdb) nexti
+		12	        int   $0x80       # llamada a write
+	(gdb) disass
+	Dump of assembler code for function write:
+		0x56556000 <+0>:	mov    $0x4,%eax
+		0x56556005 <+5>:	mov    $0x1,%ebx
+		0x5655600a <+10>:	mov    $0x56558000,%ecx
+		0x5655600f <+15>:	mov    0x56558010,%edx
+	=> 0x56556015 <+21>:	int    $0x80
+	0x56556017 <+23>:	ret    
+	End of assembler dump.
+
+	(gdb) info reg edx
+		edx            0x10                16
+	
+	(gdb) info reg
+	eax            0x4                 4
+	ecx            0x56558000          1448443904
+	edx            0x10                16
+	ebx            0x1                 1
+	esp            0xffffd0fc          0xffffd0fc
+	ebp            0x0                 0x0
+	esi            0xffffd10c          -12020
+	edi            0x56556021          1448435745
+	eip            0x56556015          0x56556015 <write+21>
+	eflags         0x286               [ PF SF IF ]
+	cs             0x23                35
+	ss             0x2b                43
+	ds             0x2b                43
+	es             0x2b                43
+	fs             0x0                 0
+	gs             0x63                99
+	
+	(gdb) nexti
+		¡hola, mundo!
+		write () at hola32.s:13
+		13	        ret               # retorno
+		
+	(gdb) info reg edx
+	edx            0x10                16
+	(gdb) info reg
+	eax            0x10                16
+	ecx            0x56558000          1448443904
+	edx            0x10                16
+	ebx            0x1                 1
+	esp            0xffffd0fc          0xffffd0fc
+	ebp            0x0                 0x0
+	esi            0xffffd10c          -12020
+	edi            0x56556021          1448435745
+	eip            0x56556017          0x56556017 <write+23>
+	eflags         0x286               [ PF SF IF ]
+	cs             0x23                35
+	ss             0x2b                43
+	ds             0x2b                43
+	es             0x2b                43
+	fs             0x0                 0
+	gs             0x63                99
+	(gdb) next
+	_start () at hola32.s:21
+	21	        call  exit        # llamada a función
+	(gdb) nexti
+	15	exit:   movl  $1, %eax    # exit
+	(gdb) nexti
+	16	        xorl  %ebx, %ebx  # 0
+	(gdb) nexti
+	17	        int   $0x80       # llamada a exit
+	(gdb) nexti
+	[Inferior 1 (process 22517) exited normally]
+
+
+		
+
+		
+
+
+
+
+
+		
+
+
+
